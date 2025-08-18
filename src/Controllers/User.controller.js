@@ -88,11 +88,7 @@ const loginuser = Asynchandler(async(req ,res)=>{
       if(!user) throw new ApiError(400 , "User does not exist")
 
 
-        // const Passwordcheck = await bcrypt.compare(password , user.password) ;
-        //    if(!Passwordcheck) {
-        //     throw new ApiError(400 , "Password is Incorrect")
-        //    }
-
+             
 
    const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
 
