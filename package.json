@@ -4,17 +4,20 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev":"node -r dotenv/config --experimental-json-modules src/server.js"
+    "dev": "nodemon src/server.jsnodemon -r dotenv/config --experimental-json-modules src/server.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/genai": "^1.16.0",
     "@google/generative-ai": "^0.24.1",
     "bcrypt": "^6.0.0",
+    "cashfree-pg": "^5.0.8",
     "cohere-ai": "^7.18.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
@@ -24,6 +27,7 @@
     "nodemailer": "^7.0.5",
     "nodemon": "^3.1.10",
     "openai": "^5.11.0",
-    "prettier": "^3.6.0"
+    "prettier": "^3.6.0",
+    "stripe": "^18.4.0"
   }
 }

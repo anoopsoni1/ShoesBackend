@@ -6,6 +6,7 @@ import  { verifyJWT} from "../Middleware/Auth.middleware.js";
  import { Chatbot } from "../Controllers/Chatbot.controller.js";
 import Mail from "../Controllers/Email.sender.js";
 import { createAddress, GetAddresses } from "../Controllers/Address.controller.js";
+import {Payment, VerifyPayment} from "../Controllers/Payment.js";
 
 const router = Router()
   
@@ -17,7 +18,9 @@ router.route("/logout").post(verifyJWT,logoutUser)
 router.route("/chat").post(Chatbot)
 router.route("/profile").get(verifyJWT,getCurrentUser)
 router.route("/contact").post(Mail)
-router.route("/update").post(verifyJWT,updateAccountDetails)
+router.route("/update").post(updateAccountDetails)
 router.route("/address/:userid").post(createAddress)
 router.route("/getaddress/:userid").get(GetAddresses)
+router.route("/payment").post(Payment)
+router.route("/verifypayment").get(VerifyPayment)
 export {router}

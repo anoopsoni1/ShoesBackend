@@ -1,51 +1,42 @@
+import dotenv from "dotenv";
+import { GoogleGenAI } from "@google/genai";
 import { Asynchandler } from "../utils/Asynchandler.js";
-import fetch from "node-fetch";
+import {ApiResponse} from "../utils/Apiresponse.js"
 
-const API_KEY = "AIzaSyDgBxl2WWzYga2trUd1SEgOqFTujFKrZBQ"; 
+dotenv.config();
+
+const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const Chatbot = Asynchandler(async (req, res) => {
-  const userMessage = req.body.message;
-
-  if (!userMessage || userMessage.trim() === "") {
-    return res.status(400).json({ success: false, message: "Message is required" });
-  }
-
+  const { question, products } = req.body;
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/chat-bison-001:generateMessage?key=${API_KEY}
-`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: `You are a chatbot for a shoe website. Only answer questions about shoes, orders, or payments. User: ${userMessage}`
-                }
-              ]
-            }
-          ]
-        })
-      }
-    );
+    const prompt = `
+You are a helpful AI for a shoe website.
+Here is the product catalog: ${JSON.stringify(products)}
+User asked: "${question}"
+Provide recommendations based only on this catalog.
+    `
+    const result = await client.models.generateContent({
+      model: "gemini-1.5-flash",
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: prompt }],
+        },
+      ],
+    });
 
-    const data = await response.json();
-    
-     console.log(data);
-     
+const text = result.candidates[0].content.parts[0].text;
+res.json( new ApiResponse(200 , {
+  text
+}, 
+ "Gemini called succesfully "
+)
+)
 
-    if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
-      const reply = data.candidates[0].content.parts[0].text;
-      return res.json({ success: true, reply });
-    } else {
-      return res.json({ success: true, reply: "Sorry, I couldn't understand that." });
-    }
   } catch (err) {
-    console.error("Gemini error:", err.message);
-    res.status(500).json({ success: false, message: "Something went wrong with Gemini API." });
+    console.error("Gemini error:", err);
+    return res.status(500).json({ answer: "Error fetching from AI" });
   }
 });
-
 export { Chatbot };

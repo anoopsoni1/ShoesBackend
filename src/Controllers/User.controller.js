@@ -125,28 +125,22 @@ const logoutUser = Asynchandler(async(req, res) => {
   res.json({ user });
 };
 
-const updateAccountDetails = Asynchandler(async(req, res) => {
-    const {fullName, email} = req.body
-
-    if (!fullName || !email) {
-        throw new ApiError(400, "All fields are required")
+const updateAccountDetails = Asynchandler(async (req, res) => {
+    console.log("req.body 👉", req.body) || {}
+    const { email, FirstName } = req.body
+    if (!FirstName || !email) {
+        throw new ApiError(400, "All fields are required");
     }
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
-        {
-            $set: {
-                fullName,
-                email: email
-            }
-        },
-        {new: true}
-        
-    ).select("-password")
+        { $set: { FirstName, email } },
+        { new: true }
+    ).select("-password");
 
     return res
-    .status(200)
-    .json(new ApiResponse(200, user, "Account details updated successfully"))
+        .status(200)
+        .json(new ApiResponse(200, user, "Account details updated successfully"));
 });
 
 
