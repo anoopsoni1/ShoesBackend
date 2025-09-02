@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/server.jsnodemon -r dotenv/config --experimental-json-modules src/server.js" ,
-     "start": "node src/server.jsnodemon -r dotenv/config --experimental-json-modules src/server.js"
+     "start": "node src/server.jsnodemon -r dotenv/config --experimental-json-modules src/server.js" ,
+     "build": "echo 'No build needed for backend'"
   },
   "author": "",
   "license": "ISC",
