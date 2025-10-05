@@ -1,48 +1,61 @@
 import {Address} from "../Models/Adrress.models.js"
 import { ApiError } from "../utils/Apierror.js";
 import { Asynchandler } from "../utils/Asynchandler.js";
+import { ApiResponse } from "../utils/Apiresponse.js";
 
 const  createAddress = Asynchandler(async(req ,res )=>{
 try {
-    const data = req.body
-   const {userid} = req.params
-      
-        
-      if(!userid) throw new ApiError("User ID is required");
+  const {formData , userId } =  req.body
 
-      if(!data) throw new ApiError("Address is required");
-    
-         const addres = new Address(data);
-              await addres.save();
+    if(!userId) throw new ApiError(400 , " User id is Required")
+  console.log("Received form data:", formData);
 
-    res.status(201).json({
-      success: true,
-      message: "Address saved successfully",
-      addres,
-    });
+  
+  const { firstName, lastName, email, phoneNumber, country, city, streetAddress, area, postalCode } = formData;
+
+  if (!firstName || !email) {
+    return res.status(400).json({ message: "First name and email are required." });
+  }
+
+   let cartting  = await Address.findOne({ userId });
+    if(!cartting){
+   cartting = await Address.create({ userId ,
+  firstName, lastName, email, phoneNumber, country, city, streetAddress, area, postalCode
+      })
+    }  else {
+    await cartting.save() ;
+    }
+
+    res
+    .status(200)
+    .json(new ApiResponse(200 , cartting ,"Address save succesfully"))
+
   } catch (error) {
     console.error("Error creating address:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 }) 
   
-const  GetAddresses = Asynchandler(async(req ,res)=>{
+const GetAddresses = Asynchandler(async (req, res) => {
   try {
-      const {userid} = req.params
-      
-        if (!userid) {
+    const userId = req.params.userid;
+
+    if (!userId) {
       return res.status(400).json({ success: false, message: "User ID required" });
     }
-    const addresses = await Address.find({ userid })
-          console.log(addresses);
-       res
-       . status(200)
-       .json({ success: true, addresses });
-  }       catch (error) {
-       console.error("Error fetching addresses:", error);
-      res.status(500).json({ success: false, message: "Server error" });
+
+    let addresses = await Address.findOne({ userId }).populate("userId", "name email");
+
+    if (!addresses) {
+      return res.status(404).json({ success: false, message: "No addresses found for this user" });
+    }
+
+    res.status(200).json({ success: true, addresses });
+  } catch (error) {
+    console.error("Error fetching addresses:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
-}) 
+});
 
 // exports.updateAddress = async (req, res) => {
 //   try {

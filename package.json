@@ -4,9 +4,9 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/server.jsnodemon -r dotenv/config --experimental-json-modules src/server.js" ,
-     "start": "node src/server.js" ,
-     "build": "echo 'No build needed for backend'"
+    "dev": "nodemon src/server.jsnodemon -r dotenv/config --experimental-json-modules src/server.js",
+    "start": "node src/server.js -r dotenv/config --experimental-json-modules src/server.js",
+    "build": "echo 'No build needed for backend'"
   },
   "author": "",
   "license": "ISC",
@@ -20,7 +20,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
-    "dotenv": "^16.5.0",
+    "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.0",

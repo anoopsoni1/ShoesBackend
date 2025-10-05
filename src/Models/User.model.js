@@ -46,28 +46,5 @@ userschema.methods.isPasswordCorrect = async function(password) {
 };
 
 
-//  userschema.methods.generateAccessToken = function(){
-//     const secret = process.env.ACCESS_TOKEN;
-//    return jwt.sign(
-//     { _id : this._id},
-//      secret,
-//     {
-//     expiresIn: process.env.ACCESS_TOKEN_EXPIRY
-//     }
-//    )
-//  }      
- 
-//  userschema.methods.generateRefreshToken = function(){
-//   return jwt.sign(
-//     {
-//       _id : this._id
-//     },
-//     process.env.REFRESH_TOKEN ,
-//     {
-//      expiresIn : process.env.REFRESH_TOKEN_EXPIRY
-//     }
-//   )
-//  }
-
 
 

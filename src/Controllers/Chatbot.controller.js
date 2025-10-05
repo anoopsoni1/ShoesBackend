@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
 import { Asynchandler } from "../utils/Asynchandler.js";
 import {ApiResponse} from "../utils/Apiresponse.js"
-import {ApiError} from "../utils/Apierror.js"
 
 dotenv.config();
 
@@ -25,9 +24,11 @@ Rules:
 - If asked for their name → use the user object.
 - If the question is outside this scope → politely decline.
 - if the question is about the owner of this website ->  return the name Anoop soni
+- if the question is about your name -> return the name Payal
+
     `
     const result = await client.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash",
       contents: [
         {
           role: "user",

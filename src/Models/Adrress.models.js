@@ -1,57 +1,61 @@
-import mongoose from "mongoose"
-import { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-const AddressSchema = new Schema({
-  userid: {
-     type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-          },
-  recipientName: {
-     type: String,
-     trim: true
-     },
-  phone: { 
-    type: String,
-     trim: true 
+const formSchema = new mongoose.Schema(
+     {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", 
+      required: true
     },
-
-  label: { type: String, 
-    trim: true, 
-    enum: ['home','work','other'], 
-    default: 'other' 
-  }, 
-  line1: {
-     type: String,
-     required: true,
-      trim: true 
-    }, 
-  line2: { 
-    type: String,
-     trim: true 
-    }, 
-  city: { 
-    type: String,
-     required: true,
-      trim: true 
+    firstName: {
+      type: String,
+      required: [true, "First name is required"],
+      trim: true,
+      minlength: [2, "First name must be at least 2 characters"],
     },
-  state: { 
-    type: String,
-     trim: true 
+    lastName: {
+      type: String,
+      required: [true, "Last name is required"],
+      trim: true,
+      minlength: [2, "Last name must be at least 2 characters"],
     },
-  postalCode: { 
-    type: String, 
-    trim: true,
-     index: true
-     },
-  country: {
-     type: String,
-      required: true, 
-      trim: true 
+    email: {
+      type: String,
+      required: [true, "Email is required"],
     },
-}, {
-  timestamps: true
-});
+    phoneNumber: {
+      type: String,
+      required: [true, "Phone number is required"],
+      trim: true,
+    },
+    country: {
+      type: String,
+      required: [true, "Country is required"],
+      trim: true,
+    },
+    city: {
+      type: String,
+      required: [true, "City is required"],
+      trim: true,
+    },
+    streetAddress: {
+      type: String,
+      required: [true, "Street address is required"],
+      trim: true,
+    },
+    area: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    postalCode: {
+      type: String,
+      required: [true, "Postal code is required"],
+    },
+  },
+  {
+    timestamps: true
+  }
+);
 
-export const Address = mongoose.model("Address" , AddressSchema) ;
-
-
+export const Address = mongoose.model("Form", formSchema);

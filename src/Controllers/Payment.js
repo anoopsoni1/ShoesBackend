@@ -36,8 +36,6 @@ export const Payment = Asynchandler(async (req, res) => {
     return_url: "http://localhost:5173/payment"  
   }
 };
-
-
   try {
     const response = await cashfree.PGCreateOrder(requestBody);
     console.log("Order created:", response.data);

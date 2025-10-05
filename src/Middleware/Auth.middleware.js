@@ -5,7 +5,6 @@ export const verifyJWT = (req, res, next) => {
     console.log("Cookies:", req.cookies);
     const token =
       req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
-
     if (!token) {
       console.log("No token found");
       return res.status(401).json({ message: "Unauthorized: No token provided" });
