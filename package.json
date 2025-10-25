@@ -4,8 +4,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/server.jsnodemon -r dotenv/config --experimental-json-modules src/server.js",
-    "start": "node src/server.js -r dotenv/config --experimental-json-modules src/server.js",
+   "dev": "nodemon -r dotenv/config src/server.js",
+  "start": "node -r dotenv/config src/server.js",
     "build": "echo 'No build needed for backend'"
   },
   "author": "",
