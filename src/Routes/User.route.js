@@ -7,6 +7,9 @@ import  { verifyJWT} from "../Middleware/Auth.middleware.js";
 import Mail from "../Controllers/Email.sender.js";
 import { createAddress , GetAddresses} from "../Controllers/Address.controller.js";
 import {Payment, VerifyPayment} from "../Controllers/Payment.js";
+import { Saveorder , Getorder, DeleteOrder } from "../Controllers/Order.controller.js";
+
+
 const router = Router()
   
 router.route("/register").post(parseFormData , registeruser)
@@ -22,5 +25,8 @@ router.route("/address").post(createAddress)
 router.route("/getaddress/:userid").get(GetAddresses)
 router.route("/payment").post(Payment)
 router.route("/verifypayment").post(VerifyPayment)
-router.delete("/cart/:userId/:itemId", RemoveCartItem);
+router.delete("/cart/:userId/:itemId", RemoveCartItem)
+router.route("/saveorder").post(Saveorder)
+router.route("/getorder/:userId").get(Getorder)
+router.route("/deleteorder/:orderId").delete(DeleteOrder)
 export {router}
