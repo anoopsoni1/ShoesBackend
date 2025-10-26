@@ -33,7 +33,7 @@ export const Payment = Asynchandler(async (req, res) => {
     customer_phone: phone || "9999999999"
   },
   order_meta: {
-    return_url: "http://localhost:5173/payment"  
+    return_url: "https://shoesweb-sooty.vercel.app/payment"  
   }
 };
   try {
