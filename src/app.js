@@ -6,7 +6,7 @@ const app = express() ;
 
 
 app.use(cors({
-     origin : "https://shoesweb-sooty.vercel.app",
+     origin : ["https://shoesweb-sooty.vercel.app",'http://localhost:5173'],
     credentials: true
 }))
 
