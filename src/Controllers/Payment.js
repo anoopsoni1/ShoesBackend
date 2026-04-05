@@ -22,20 +22,27 @@ export const Payment = Asynchandler(async (req, res) => {
     return res.status(400).json({ error: "Amount, Name and Email are required" });
   }
 
+  const orderId = generateOrderId();
+  const frontendBase = (process.env.FRONTEND_URL || "https://shoesweb-sooty.vercel.app").replace(
+    /\/$/,
+    ""
+  );
+  const returnUrl = `${frontendBase}/payment?order_id=${encodeURIComponent(orderId)}`;
+
   const requestBody = {
-  order_amount: amount,
-  order_currency: "INR",
-  order_id: generateOrderId(),
-  customer_details: {
-    customer_id:  "cust_" + Date.now(),
-    customer_name: name,
-    customer_email: email,
-    customer_phone: phone || "9999999999"
-  },
-  order_meta: {
-    return_url: "https://shoesweb-sooty.vercel.app/payment"  
-  }
-};
+    order_amount: amount,
+    order_currency: "INR",
+    order_id: orderId,
+    customer_details: {
+      customer_id: "cust_" + Date.now(),
+      customer_name: name,
+      customer_email: email,
+      customer_phone: phone || "9999999999",
+    },
+    order_meta: {
+      return_url: returnUrl,
+    },
+  };
   try {
     const response = await cashfree.PGCreateOrder(requestBody);
     console.log("Order created:", response.data);

@@ -1,12 +1,23 @@
 import { Asynchandler } from "../utils/Asynchandler.js";
 import { cart } from "../Models/Cart.model.js";
 
+function normalizeImageForStorage(img) {
+  if (img == null) return "";
+  const s = String(img).trim();
+  if (!s) return "";
+  if (/^https?:\/\//i.test(s)) return s;
+  if (s.startsWith("//")) return `https:${s}`;
+  if (s.startsWith("/")) return s;
+  const file = s.replace(/^\.\//, "").split("/").pop();
+  return file ? `/${file}` : "";
+}
+
 const normalizeCartItem = (item) => ({
   id: String(item.id),
   name: item.name,
   price: Number(item.price),
   quantity: Number(item.quantity) || 1,
-  image: item.image != null ? String(item.image) : "",
+  image: normalizeImageForStorage(item.image),
 });
 
 const Cartitem = Asynchandler(async (req, res) => {
