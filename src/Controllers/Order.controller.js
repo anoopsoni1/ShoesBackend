@@ -6,14 +6,34 @@ const Saveorder = Asynchandler(async (req, res) => {
     if (!req.body.userId || !req.body.items || req.body.items.length === 0) {
       return res.status(400).json({ message: "Invalid order data" });
     }
+    let shippingAddress = req.body.address ?? req.body.shippingAddress;
+    if (typeof shippingAddress === "string") {
+      try {
+        shippingAddress = JSON.parse(shippingAddress);
+      } catch {
+        shippingAddress = { raw: shippingAddress };
+      }
+    }
+
+    const rawItems = Array.isArray(req.body.items) ? req.body.items : [];
+    const items = rawItems.map((i) => ({
+      name: i.name,
+      image: i.image ?? "",
+      price: Number(i.price),
+      quantity: Number(i.quantity) || 1,
+    }));
+
     const newOrder = new Order({
       userId: req.body.userId,
-      items: req.body.items,
-      totalAmount: req.body.totalAmount,
-      address: req.body.address,
+      items,
+      totalAmount: Number(req.body.totalAmount),
+      shippingAddress,
       paymentStatus: req.body.paymentStatus || "Pending",
     });
 
+     console.log(newOrder);
+     
+     
     const savedOrder = await newOrder.save();
 
     res.status(201).json({
@@ -35,14 +55,10 @@ const Saveorder = Asynchandler(async (req, res) => {
       .sort({ createdAt: -1 })
       .populate("userId");
 
-    if (!orders || orders.length === 0) {
-      return res.status(404).json({ message: "No orders found for this user" });
-    }
-
     res.status(200).json({
       success: true,
-      count: orders.length,
-      orders,
+      count: orders?.length ?? 0,
+      orders: orders ?? [],
     });
   } catch (err) {
     console.error("Error fetching orders:", err);

@@ -9,12 +9,13 @@ const CartSchema = new mongoose.Schema({
     },
   items: [
     {
-       id : String,
-      name : String,
-      price : Number,
-      quantity : Number,
-    }
-  ]
+      id: String,
+      name: String,
+      image: { type: String, default: "" },
+      price: Number,
+      quantity: Number,
+    },
+  ],
 } , {timestamps : true});
 
 export const cart =  mongoose.model('cart', CartSchema);

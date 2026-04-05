@@ -23,9 +23,7 @@ Rules:
 - If the user asks for order status → return the status from the orders data.
 - If asked for their name → use the user object.
 - If the question is outside this scope → politely decline.
-- if the question is about the owner of this website ->  return the name Anoop soni
-- if the question is about your name -> return the name Payal
-
+- if the question is about the owner of this website ->  return the name Gaurav Pratap Singh
     `
     const result = await client.models.generateContent({
       model: "gemini-2.5-flash",

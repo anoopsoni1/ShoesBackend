@@ -5,13 +5,27 @@ import { ApiResponse } from "../utils/Apiresponse.js";
 
 const  createAddress = Asynchandler(async(req ,res )=>{
 try {
-  const {formData , userId } =  req.body
+  const { formData: nestedForm, userId } = req.body;
 
     if(!userId) throw new ApiError(400 , " User id is Required")
-  console.log("Received form data:", formData);
 
-  
-  const { firstName, lastName, email, phoneNumber, country, city, streetAddress, area, postalCode } = formData;
+  const formPayload =
+    nestedForm && typeof nestedForm === "object"
+      ? nestedForm
+      : {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          phoneNumber: req.body.phoneNumber,
+          country: req.body.country,
+          city: req.body.city,
+          streetAddress: req.body.streetAddress,
+          area: req.body.area,
+          postalCode: req.body.postalCode,
+        };
+
+  const { firstName, lastName, email, phoneNumber, country, city, streetAddress, area, postalCode } =
+    formPayload;
 
   if (!firstName || !email) {
     return res.status(400).json({ message: "First name and email are required." });
@@ -23,7 +37,18 @@ try {
   firstName, lastName, email, phoneNumber, country, city, streetAddress, area, postalCode
       })
     }  else {
-    await cartting.save() ;
+    Object.assign(cartting, {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      country,
+      city,
+      streetAddress,
+      area,
+      postalCode,
+    });
+    await cartting.save();
     }
 
     res

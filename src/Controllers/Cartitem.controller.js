@@ -1,6 +1,13 @@
 import { Asynchandler } from "../utils/Asynchandler.js";
-import { ApiError } from "../utils/Apierror.js";
-import { cart} from "../Models/Cart.model.js";
+import { cart } from "../Models/Cart.model.js";
+
+const normalizeCartItem = (item) => ({
+  id: String(item.id),
+  name: item.name,
+  price: Number(item.price),
+  quantity: Number(item.quantity) || 1,
+  image: item.image != null ? String(item.image) : "",
+});
 
 const Cartitem = Asynchandler(async (req, res) => {
   try {
@@ -10,14 +17,15 @@ const Cartitem = Asynchandler(async (req, res) => {
       return res.status(400).json({ error: "userId and items are required" });
     }
 
+    const normalized = items.map(normalizeCartItem);
+
     let cartt = await cart.findOne({ userId });
 
     if (!cartt) {
-    
-      cartt = await cart.create({ userId, items });
+      cartt = await cart.create({ userId, items: normalized });
     } else {
-      items.forEach((item) => {
-        const index = cartt.items.findIndex((i) => i.id === item.id); 
+      normalized.forEach((item) => {
+        const index = cartt.items.findIndex((i) => String(i.id) === item.id);
         if (index > -1) {
           cartt.items[index].quantity += item.quantity;
         } else {
@@ -57,7 +65,9 @@ const RemoveCartItem = Asynchandler(async (req, res) => {
     const userCart = await cart.findOne({ userId });
     if (!userCart) return res.status(404).json({ message: "Cart not found" });
 
-    userCart.items = userCart.items.filter(item => item.id !== itemId);
+    userCart.items = userCart.items.filter(
+      (item) => String(item.id) !== String(itemId)
+    );
     await userCart.save();
 
     res.status(200).json({ message: "Item removed", items: userCart.items });
