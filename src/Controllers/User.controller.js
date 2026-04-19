@@ -92,10 +92,14 @@ const loginuser = Asynchandler(async(req ,res)=>{
 
    const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
 
-   const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+   const loggedInUser = await User.findById(user._id).select("-password -refreshtoken")
+   /* Cross-site (e.g. Vercel → Render): SameSite=None + Secure required for cookies on fetch(..., credentials). */
    const options = {
         httpOnly: true,
-        secure: true
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
     }
        return res
     .status(200)
@@ -111,19 +115,22 @@ const loginuser = Asynchandler(async(req ,res)=>{
     )
 })
 const logoutUser = Asynchandler(async(req, res) => {
-   
   res.clearCookie("accessToken", {
     httpOnly: true,
-    secure: false,
+    secure: true,
+    sameSite: "none",
+    path: "/",
   });
   res.status(200).json({ message: "Logged out" });
 });
 
-  const getCurrentUser = (req, res) => {
-  const user = req.user; 
-  if (!user) return res.status(401).json({ message: "Unauthorized" });
-  res.json({ user });
-};
+const getCurrentUser = Asynchandler(async (req, res) => {
+  const userId = req.user?.user;
+  if (!userId) throw new ApiError(401, "Unauthorized");
+  const user = await User.findById(userId).select("-password -refreshtoken");
+  if (!user) throw new ApiError(401, "Unauthorized");
+  return res.status(200).json({ user });
+});
 
 const updateAccountDetails = Asynchandler(async (req, res) => {
     console.log("req.body 👉", req.body) || {}

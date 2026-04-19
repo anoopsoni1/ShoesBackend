@@ -89,4 +89,34 @@ const RemoveCartItem = Asynchandler(async (req, res) => {
 });
 
 
-export { Cartitem, Getcartitem, RemoveCartItem};
+const UpdateCartItemQuantity = Asynchandler(async (req, res) => {
+  try {
+    const { userId, itemId } = req.params;
+    const { quantity } = req.body;
+
+    const parsedQuantity = Number(quantity);
+    if (!Number.isFinite(parsedQuantity) || parsedQuantity < 1) {
+      return res
+        .status(400)
+        .json({ message: "Quantity must be a positive number" });
+    }
+
+    const userCart = await cart.findOne({ userId });
+    if (!userCart) return res.status(404).json({ message: "Cart not found" });
+
+    const item = userCart.items.find(
+      (cartItem) => String(cartItem.id) === String(itemId)
+    );
+    if (!item) return res.status(404).json({ message: "Item not found in cart" });
+
+    item.quantity = Math.floor(parsedQuantity);
+    await userCart.save();
+
+    res.status(200).json({ message: "Quantity updated", items: userCart.items });
+  } catch (err) {
+    console.error("Failed to update quantity:", err);
+    res.status(500).json({ message: "Failed to update quantity" });
+  }
+});
+
+export { Cartitem, Getcartitem, RemoveCartItem, UpdateCartItemQuantity};
