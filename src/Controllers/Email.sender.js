@@ -13,7 +13,7 @@ const Mail = Asynchandler(async (req, res) => {
   try {
     // Send email via Resend API
     const response = await resend.emails.send({
-      from: "Shoes Website <onboarding@resend.dev>", // your verified sender
+      from: "Xploit <onboarding@resend.dev>", // your verified sender
       to: process.env.EMAIL_USER, // recipient
       subject: `New Contact from ${name}`,
       html: `

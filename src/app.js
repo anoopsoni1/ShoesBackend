@@ -8,7 +8,10 @@ const app = express() ;
 const defaultOrigins = [
   "https://shoesweb-sooty.vercel.app",
   "http://localhost:5173",
-  "http://127.0.0.1:5173",
+  "http://127.0.0.1:5173" ,
+  "http://localhost:3000" ,
+  "https://xploitclub-mu.vercel.app"
+  ,
 ];
 const extraOrigins =
   process.env.CLIENT_ORIGINS?.split(",").map((o) => o.trim()).filter(Boolean) ?? [];
